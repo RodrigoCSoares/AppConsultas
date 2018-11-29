@@ -1,18 +1,24 @@
 package com.example.rodrigosoares.appconsultas;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.rodrigosoares.appconsultas.database.Consulta;
+import com.example.rodrigosoares.appconsultas.database.Consultas;
 import com.example.rodrigosoares.appconsultas.interfaces.DownloadCallback;
+
+import org.json.JSONArray;
+
+import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity implements DownloadCallback<String> {
     // Keep a reference to the NetworkFragment, which owns the AsyncTask object
@@ -42,12 +48,11 @@ public class LoginActivity extends AppCompatActivity implements DownloadCallback
                 startDownload();
             }
         });
-
         mProgressBar = findViewById(R.id.progress_bar);
     }
 
     private void startDownload() {
-        String url = "http://192.168.1.43:8080/idosos?login="+mTxtLogin.getText().toString()+"&password="+mTxtPassword.getText().toString();
+        String url = "http://192.168.1.45:8080/idosos?login=" + mTxtLogin.getText().toString() + "&password=" + mTxtPassword.getText().toString();
         mNetworkFragment = NetworkFragment.getInstance(getSupportFragmentManager(), url);
         mNetworkFragment.mUrlString = url;
         mNetworkFragment.mCallback = this;
@@ -63,8 +68,25 @@ public class LoginActivity extends AppCompatActivity implements DownloadCallback
 
     @Override
     public void updateFromDownload(String result) {
-        if(successfulLogin){
-            Log.d("RDEBUG", "Successful Login");
+        try {
+
+            if (successfulLogin) {
+                ArrayList<Consulta> consultas = new ArrayList<>();
+                JSONArray arr = new JSONArray(result);
+
+                for (int i = 0; i < arr.length(); i++) {
+                    Integer id = arr.getJSONObject(i).getInt("id");
+                    String data = arr.getJSONObject(i).getString("data_agenda");
+                    String observacao = arr.getJSONObject(i).getString("observacao");
+                    String local = arr.getJSONObject(i).getString("local");
+
+                    Consulta consulta = new Consulta(id, data, observacao, local);
+                    consultas.add(consulta);
+                }
+
+                Consultas.CONSULTAS = consultas;
+            }
+        } catch (Exception erro) {
         }
     }
 
@@ -78,7 +100,7 @@ public class LoginActivity extends AppCompatActivity implements DownloadCallback
 
     @Override
     public void onProgressUpdate(int progressCode, int percentComplete) {
-        switch(progressCode) {
+        switch (progressCode) {
             case Progress.ERROR:
                 successfulLogin = false;
                 Toast.makeText(this, "Senha ou usuário incorretos", Toast.LENGTH_SHORT).show();
@@ -91,6 +113,10 @@ public class LoginActivity extends AppCompatActivity implements DownloadCallback
         mDownloading = false;
         if (mNetworkFragment != null) {
             mNetworkFragment.cancelDownload();
+        }
+        if(successfulLogin){
+            Intent intent = new Intent(this, MenuActivity.class);
+            startActivity(intent);
         }
         mProgressBar.setVisibility(View.GONE);
         mBtnSignIn.setVisibility(View.VISIBLE);
