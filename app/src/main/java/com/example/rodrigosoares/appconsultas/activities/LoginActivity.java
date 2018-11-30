@@ -1,4 +1,4 @@
-package com.example.rodrigosoares.appconsultas;
+package com.example.rodrigosoares.appconsultas.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.rodrigosoares.appconsultas.NetworkFragment;
+import com.example.rodrigosoares.appconsultas.R;
 import com.example.rodrigosoares.appconsultas.database.Consulta;
 import com.example.rodrigosoares.appconsultas.database.Consultas;
 import com.example.rodrigosoares.appconsultas.interfaces.DownloadCallback;
@@ -52,7 +54,7 @@ public class LoginActivity extends AppCompatActivity implements DownloadCallback
     }
 
     private void startDownload() {
-        String url = "http://192.168.1.45:8080/idosos?login=" + mTxtLogin.getText().toString() + "&password=" + mTxtPassword.getText().toString();
+        String url = "http://192.168.100.101:8080/idosos?login=" + mTxtLogin.getText().toString() + "&password=" + mTxtPassword.getText().toString();
         mNetworkFragment = NetworkFragment.getInstance(getSupportFragmentManager(), url);
         mNetworkFragment.mUrlString = url;
         mNetworkFragment.mCallback = this;
@@ -87,6 +89,7 @@ public class LoginActivity extends AppCompatActivity implements DownloadCallback
                 Consultas.CONSULTAS = consultas;
             }
         } catch (Exception erro) {
+            successfulLogin = false;
         }
     }
 
@@ -118,7 +121,10 @@ public class LoginActivity extends AppCompatActivity implements DownloadCallback
             Intent intent = new Intent(this, MenuActivity.class);
             startActivity(intent);
         }
-        mProgressBar.setVisibility(View.GONE);
-        mBtnSignIn.setVisibility(View.VISIBLE);
+        else {
+            Toast.makeText(this, "Falha ao logar", Toast.LENGTH_SHORT).show();
+        }
+            mProgressBar.setVisibility(View.GONE);
+            mBtnSignIn.setVisibility(View.VISIBLE);
     }
 }
