@@ -57,6 +57,7 @@ public class NovaConsultaActivity extends AppCompatActivity implements DownloadC
             String local = ((TextView) findViewById(R.id.txt_local)).getText().toString();
             Gson gson = new Gson();
             mNovaConsulta = new Consulta(id, data_agenda, observacao, local);
+            //TODO alterar IP aqui
             String url = "http://192.168.43.159:8080/inserirconsulta?" +
                     "id="+id+"&" +
                     "local="+local+"&" +

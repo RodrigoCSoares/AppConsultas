@@ -54,6 +54,7 @@ public class LoginActivity extends AppCompatActivity implements DownloadCallback
     }
 
     private void startDownload() {
+        //TODO alterar IP aqui
         String url = "http://192.168.43.159:8080/idosos?login=" + mTxtLogin.getText().toString() + "&password=" + mTxtPassword.getText().toString();
         mNetworkFragment = NetworkFragment.getInstance(getSupportFragmentManager(), url);
         mNetworkFragment.mUrlString = url;
