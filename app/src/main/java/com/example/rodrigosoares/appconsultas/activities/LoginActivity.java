@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity implements DownloadCallback
     }
 
     private void startDownload() {
-        String url = "http://192.168.100.101:8080/idosos?login=" + mTxtLogin.getText().toString() + "&password=" + mTxtPassword.getText().toString();
+        String url = "http://192.168.43.159:8080/idosos?login=" + mTxtLogin.getText().toString() + "&password=" + mTxtPassword.getText().toString();
         mNetworkFragment = NetworkFragment.getInstance(getSupportFragmentManager(), url);
         mNetworkFragment.mUrlString = url;
         mNetworkFragment.mCallback = this;

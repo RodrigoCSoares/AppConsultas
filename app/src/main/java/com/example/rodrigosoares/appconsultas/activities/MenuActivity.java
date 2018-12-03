@@ -18,12 +18,21 @@ public class MenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
 
         Button btnConsultasAgendadas = findViewById(R.id.consultas_agendadas);
+        Button btnNovaConsulta = findViewById(R.id.nova_consulta);
         ConstraintLayout btnVoltar = findViewById(R.id.voltar);
 
         btnConsultasAgendadas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), ConsultasMenuActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btnNovaConsulta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), NovaConsultaActivity.class);
                 startActivity(intent);
             }
         });
